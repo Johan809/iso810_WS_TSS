@@ -1,12 +1,12 @@
-using iso810_asignacion2.Model;
+using FormGenerarTSS.Model;
 
-namespace iso810_asignacion2
+namespace FormGenerarTSS
 {
     public partial class Form1 : Form
     {
         private ArchivoTSS ArchivoTSS { get; set; }
         private List<Empleado> Empleados { get; set; }
-        private const string RUTA_ARCHIVO = @"C:\Users\Johan\Documents\Github\iso810_asignacion2\files";
+        private const string RUTA_ARCHIVO = @"C:\Users\Johan\Documents\Github\iso810_WS_TSS\files";
 
         public Form1()
         {
@@ -27,7 +27,7 @@ namespace iso810_asignacion2
                 dataGridView1.Columns["Nss"].HeaderText = "NSS";
 
             if (dataGridView1.Columns["Cedula"] != null)
-                dataGridView1.Columns["Cedula"].HeaderText = "Cédula";
+                dataGridView1.Columns["Cedula"].HeaderText = "CÃ©dula";
 
             if (dataGridView1.Columns["Nombres"] != null)
                 dataGridView1.Columns["Nombres"].HeaderText = "Nombres";
@@ -93,7 +93,7 @@ namespace iso810_asignacion2
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ocurrió un error al generar el archivo: {ex.Message}");
+                MessageBox.Show($"Ocurriï¿½ un error al generar el archivo: {ex.Message}");
             }
         }
 
@@ -119,12 +119,12 @@ namespace iso810_asignacion2
         {
             if (string.IsNullOrEmpty(txtRnc.Text) || txtRnc.Text.Length < 9)
             {
-                MessageBox.Show("Debe ingresar un RNC válido");
+                MessageBox.Show("Debe ingresar un RNC vï¿½lido");
                 return false;
             }
             if (ddlPeriodoMes.SelectedItem == null || ddlPeriodoAno.SelectedItem == null)
             {
-                MessageBox.Show("Para el Periodo debe seleccionar un mes y año válidos");
+                MessageBox.Show("Para el Periodo debe seleccionar un mes y aï¿½o vï¿½lidos");
                 return false;
             }
             return true;

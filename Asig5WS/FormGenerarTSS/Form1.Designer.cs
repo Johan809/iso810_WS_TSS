@@ -1,4 +1,4 @@
-﻿namespace iso810_asignacion2
+﻿namespace FormGenerarTSS
 {
     partial class Form1
     {

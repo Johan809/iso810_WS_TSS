@@ -1,4 +1,4 @@
-﻿namespace iso810_asignacion2.Model
+﻿namespace FormGenerarTSS.Model
 {
     public class Encabezado
     {
