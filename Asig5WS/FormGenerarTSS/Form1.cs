@@ -1,17 +1,19 @@
 using FormGenerarTSS.Model;
+using System.Text;
 
 namespace FormGenerarTSS
 {
     public partial class Form1 : Form
     {
-        private ArchivoTSS ArchivoTSS { get; set; }
+        private AutodeterminacionTSS ArchivoTSS { get; set; }
         private List<Empleado> Empleados { get; set; }
         private const string RUTA_ARCHIVO = @"C:\Users\Johan\Documents\Github\iso810_WS_TSS\files";
+        private const string API_URL = "https://localhost:7175/api/autodeterminacion";
 
         public Form1()
         {
             InitializeComponent();
-            ArchivoTSS = new ArchivoTSS();
+            ArchivoTSS = new AutodeterminacionTSS();
             dtpFechaTransmicion.Value = DateTime.Now;
             Empleados = [.. Empleado.GetEmpleados()];
             dataGridView1.DataSource = Empleados;
@@ -68,38 +70,53 @@ namespace FormGenerarTSS
             }
         }
 
-        private void btnGenerarArchivo_Click(object sender, EventArgs e)
+        private async void btnGenerarArchivo_Click(object sender, EventArgs e)
         {
             if (!Validar())
                 return;
+
             try
             {
                 CrearObjTSS();
                 if (!ArchivoTSS.EsValido())
                 {
-                    MessageBox.Show("El archivo de no pudo ser generado correctamente.");
+                    MessageBox.Show("No se pudo enviar la autodeterminación correctamente.");
                     return;
                 }
 
-                //fijo por ahora
-                if (!Directory.Exists(RUTA_ARCHIVO))
-                    Directory.CreateDirectory(RUTA_ARCHIVO);
+                string json = ArchivoTSS.GenerarJSON();
+                bool resultado = await EnviarJsonAlWebService(json);
 
-                string sufijoUnico = Guid.NewGuid().ToString().Substring(0, 8);
-                string rutaArchivo = Path.Combine(RUTA_ARCHIVO, $"autodeterminacion_tss_{sufijoUnico}.txt");
-
-                File.WriteAllText(rutaArchivo, ArchivoTSS.GenerarArchivo());
-                MessageBox.Show($"Archivo generado exitosamente en: {rutaArchivo}");
+                if (resultado)
+                    MessageBox.Show("Autodeterminación enviada exitosamente.");
+                else
+                    MessageBox.Show("Ocurrió un error al enviar la autodeterminación.");
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ocurri� un error al generar el archivo: {ex.Message}");
+                MessageBox.Show($"Error al procesar la autodeterminación: {ex.Message}");
+            }
+        }
+
+        private async Task<bool> EnviarJsonAlWebService(string json)
+        {
+            try
+            {
+                using HttpClient client = new();
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await client.PostAsync(API_URL, content);
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al conectar con el webservice: {ex.Message}");
+                return false;
             }
         }
 
         private void CrearObjTSS()
         {
-            ArchivoTSS = new ArchivoTSS
+            ArchivoTSS = new AutodeterminacionTSS
             {
                 Encabezado = new Encabezado()
                 {

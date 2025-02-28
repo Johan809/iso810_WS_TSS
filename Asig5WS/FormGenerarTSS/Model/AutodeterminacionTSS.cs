@@ -1,14 +1,22 @@
 ﻿using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace FormGenerarTSS.Model
 {
-    public class ArchivoTSS
+    public class AutodeterminacionTSS
     {
+        [JsonIgnore]
+        private JsonSerializerOptions serializerOptions = new()
+        {
+            WriteIndented = true,
+        };
+
         public Encabezado Encabezado { get; set; }
         public List<Empleado> Detalles { get; set; }
         public Sumario Sumario { get; set; }
 
-        public ArchivoTSS()
+        public AutodeterminacionTSS()
         {
             Detalles = new List<Empleado>();
         }
@@ -16,6 +24,14 @@ namespace FormGenerarTSS.Model
         public bool EsValido()
         {
             return Encabezado != null && Sumario != null && Detalles.Count > 0;
+        }
+
+        public string GenerarJSON()
+        {
+            if (!EsValido())
+                return string.Empty;
+
+            return JsonSerializer.Serialize(this, serializerOptions);
         }
 
         public string GenerarArchivo()

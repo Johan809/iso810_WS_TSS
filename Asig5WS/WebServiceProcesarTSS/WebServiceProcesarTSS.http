@@ -1,0 +1,6 @@
+@WebServiceProcesarTSS_HostAddress = http://localhost:5001
+
+GET {{WebServiceProcesarTSS_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
