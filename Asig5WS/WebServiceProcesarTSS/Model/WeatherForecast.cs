@@ -1,4 +1,4 @@
-namespace WebServiceProcesarTSS
+namespace WebServiceProcesarTSS.Model
 {
     public class WeatherForecast
     {

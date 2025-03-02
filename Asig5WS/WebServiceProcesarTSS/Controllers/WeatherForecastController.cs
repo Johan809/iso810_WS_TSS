@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using WebServiceProcesarTSS.Model;
 
 namespace WebServiceProcesarTSS.Controllers
 {

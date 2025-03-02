@@ -1,4 +1,6 @@
+using Microsoft.EntityFrameworkCore;
 using System.Globalization;
+using WebServiceProcesarTSS;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -6,20 +8,21 @@ var defaultCulture = new CultureInfo("es-ES");
 CultureInfo.DefaultThreadCurrentCulture = defaultCulture;
 CultureInfo.DefaultThreadCurrentUICulture = defaultCulture;
 
-// Add services to the container.
+var connectionString = builder.Configuration.GetConnectionString("TSSDatabase");
+builder.Services.AddDbContext<TSSDbContext>(options =>
+    options.UseSqlServer(connectionString));
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("PermitirTodo", builder =>
         builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 });
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -27,9 +30,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

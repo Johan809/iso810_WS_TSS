@@ -8,7 +8,7 @@ namespace FormGenerarTSS
         private AutodeterminacionTSS ArchivoTSS { get; set; }
         private List<Empleado> Empleados { get; set; }
         private const string RUTA_ARCHIVO = @"C:\Users\Johan\Documents\Github\iso810_WS_TSS\files";
-        private const string API_URL = "https://localhost:7175/api/autodeterminacion";
+        private const string API_URL = "https://localhost:7175/Autodeterminacion";
 
         public Form1()
         {
@@ -85,9 +85,9 @@ namespace FormGenerarTSS
                 }
 
                 string json = ArchivoTSS.GenerarJSON();
-                bool resultado = await EnviarJsonAlWebService(json);
+                var (exito, mensaje) = await EnviarJsonAlWebService(json);
 
-                if (resultado)
+                if (exito)
                     MessageBox.Show("Autodeterminación enviada exitosamente.");
                 else
                     MessageBox.Show("Ocurrió un error al enviar la autodeterminación.");
@@ -98,19 +98,20 @@ namespace FormGenerarTSS
             }
         }
 
-        private async Task<bool> EnviarJsonAlWebService(string json)
+        private async Task<(bool Exito, string Mensaje)> EnviarJsonAlWebService(string json)
         {
             try
             {
                 using HttpClient client = new();
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
                 HttpResponseMessage response = await client.PostAsync(API_URL, content);
-                return response.IsSuccessStatusCode;
+                string message = await response.Content.ReadAsStringAsync();
+                return (response.IsSuccessStatusCode, message);
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error al conectar con el webservice: {ex.Message}");
-                return false;
+                return (false, ex.Message);
             }
         }
 
@@ -136,12 +137,12 @@ namespace FormGenerarTSS
         {
             if (string.IsNullOrEmpty(txtRnc.Text) || txtRnc.Text.Length < 9)
             {
-                MessageBox.Show("Debe ingresar un RNC v�lido");
+                MessageBox.Show("Debe ingresar un RNC válido");
                 return false;
             }
             if (ddlPeriodoMes.SelectedItem == null || ddlPeriodoAno.SelectedItem == null)
             {
-                MessageBox.Show("Para el Periodo debe seleccionar un mes y a�o v�lidos");
+                MessageBox.Show("Para el Periodo debe seleccionar un mes y año válidos");
                 return false;
             }
             return true;

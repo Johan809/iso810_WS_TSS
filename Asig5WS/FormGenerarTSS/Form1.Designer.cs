@@ -59,7 +59,7 @@
             btnGenerarArchivo.Name = "btnGenerarArchivo";
             btnGenerarArchivo.Size = new Size(194, 40);
             btnGenerarArchivo.TabIndex = 2;
-            btnGenerarArchivo.Text = "Generar Archivo";
+            btnGenerarArchivo.Text = "Enviar";
             btnGenerarArchivo.UseVisualStyleBackColor = true;
             btnGenerarArchivo.Click += btnGenerarArchivo_Click;
             // 
@@ -164,7 +164,7 @@
             Controls.Add(groupBox1);
             Controls.Add(btnGenerarArchivo);
             Name = "Form1";
-            Text = "Generar Archivo TSS";
+            Text = "Autodeterminacion TSS";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             groupBox1.ResumeLayout(false);
             groupBox2.ResumeLayout(false);
